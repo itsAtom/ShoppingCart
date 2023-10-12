@@ -17,12 +17,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ShoppingCartContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
-builder.Services.AddAuthentication("Basic")
-    .AddScheme<BasicAuthenticationOption, BasicAuthenticationHandler>("Basic", null);
-builder.Services.AddTransient<IAuthenticationHandler, BasicAuthenticationHandler>();
-var app = builder.Build();
+//builder.Services.AddAuthentication("Basic")
+  //  .AddScheme<BasicAuthenticationOption, BasicAuthenticationHandler>("Basic", null);
+//builder.Services.AddTransient<IAuthenticationHandler, BasicAuthenticationHandler>();
 
-builder.Services.AddIdentityServer().AddInMemoryApiResources(config.GetApiResources()).AddInMemoryClients(config.GetClients()).AddProfileService<ProfileServices>().AddDeveloperSigningCredential();
+
+builder.Services.AddIdentityServer()
+    .AddInMemoryApiResources(config.GetApiResources())
+    .AddInMemoryClients(config.GetClients())
+    .AddProfileService<ProfileServices>()
+    .AddDeveloperSigningCredential();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme =
@@ -32,14 +37,14 @@ builder.Services.AddAuthentication(options =>
 }).AddJwtBearer(o =>
 {
     o.Authority = "http://localhost:5092";
-    o.Audience = "demo4SPR21.ReadAccess";
+    o.Audience = "ShoppingCart.ReadAccess";
     o.RequireHttpsMetadata = false;
 });
 
 builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourcePasswordValidator>();
 builder.Services.AddTransient<IProfileService, ProfileServices>();
 
-
+var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -48,9 +53,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.UseStaticFiles();
+app.UseIdentityServer();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
