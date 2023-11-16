@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>FlixOneStore Home</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnSearch').click(function () {
+                var searchText = $('#txtSearch').val().trim();
+                if (searchText) {
+                    $('#tblProducts').empty();
+                    LoadProducts(searchText);
+                }
+            });// end of click
+
+            function LoadProducts(searchText) {
+                //Load products details
+                if (!searchText)
+                    searchText = "";
+                $.ajax({
+                    url: 'http://localhost:5092/api/Productsdetails',
+                    type: "GET",
+                    contentType: "application/json",
+                    dataType: "json",
+                    success: function (result) {
+                        $.each(result, function (index, value) {
+                            $('#tblProducts')
+                                .append('<tr><td>' +
+                                    '<h3>' + value.name + '</h3>' +
+                                    '<p>' + value.description + '</p>' +
+                                    '<a target="_blank" href=' + value.url + '>Amazon Link</a>' +
+                                    '<input type="button" style="float:right;"class="btn btn-success" value="Add To Cart" />' +
+                                    '</td></tr>');
+                        });
+                    }
+                });
+            }
+            
+        }); //end of ready
+    </script>
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Demo</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a data-div="Home" href="#">Home</a></li>
+                <li><a id="aProfile" data-div="Profile" href="#">Profile</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="Home">
+            <div class="row">
+                <div class="col-lg-5">
+                    <input type="text" id="txtSearch" class="form-control" placeholder="Enter text to search" />
+                </div>
+                <div class="col-lg-2">
+                    <button type="button" class="btn btn-info" id="btnSearch">
+                        <span class="glyphicon glyphicon-search"></span> Search
+                    </button>
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-4"><h3>My Cart</h3></div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8">
+                    <table id="tblProducts"></table>
+                </div>
+                <div class="col-lg-4">
+                    <table id="tblCart" class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Price</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <input type="button" id="btnPlaceOrder" class="btn btn-primary" value="Place Order" />
+                </div>
+            </div>
+        </div>
+        <div id="Order" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Place Order</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Shipping Details</h4>
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="txtStreetAdd">Street Address</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           id="txtStreetAdd" placeholder="Street Address" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="txtCity">City</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           id="txtCity" placeholder="City" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="txtState">State</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           id="txtState" placeholder="State" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="txtPostalCode">Postal Code</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           id="txtPostalCode" placeholder="Postal Code" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="txtCountry">Country</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control"
+                                           id="txtCountry" placeholder="Country" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="btnConfirmOrder">Submit</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+</body>
+</html>

@@ -15,10 +15,17 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+var connectionString = builder.Configuration.GetConnectionString("Connection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ShoppingCartContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));
+options.UseSqlServer(connectionString));
+
+/*builder.Services.AddDbContext<ShoppingCartContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Connection")));*/
+
+
 //builder.Services.AddAuthentication("Basic")
-  //  .AddScheme<BasicAuthenticationOption, BasicAuthenticationHandler>("Basic", null);
+//  .AddScheme<BasicAuthenticationOption, BasicAuthenticationHandler>("Basic", null);
 //builder.Services.AddTransient<IAuthenticationHandler, BasicAuthenticationHandler>();
 
 
@@ -55,7 +62,7 @@ if (app.Environment.IsDevelopment())
 app.UseStaticFiles();
 app.UseIdentityServer();
 
-//app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllers();
 

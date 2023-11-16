@@ -36,7 +36,7 @@ namespace Week2_ShoppingCart.Controllers
         // GET: api/Customers/5
         [HttpGet("{id}")]
         /*[Authorize(AuthenticationSchemes = "Basic")]*/
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> GetCustomers([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)

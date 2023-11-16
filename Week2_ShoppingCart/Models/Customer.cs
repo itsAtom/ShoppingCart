@@ -26,4 +26,14 @@ public partial class Customer
     public string Password { get; set; } = null!;
 
     public bool Newsletteropted { get; set; }
+
+    public virtual ICollection<AddressBook> AddressBooks { get; set; } = new List<AddressBook>();
+
+    public virtual ICollection<CartAttribute> CartAttributes { get; set; } = new List<CartAttribute>();
+
+    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+
+    public virtual ICollection<CustomerInfo> CustomerInfos { get; set; } = new List<CustomerInfo>();
+
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }
